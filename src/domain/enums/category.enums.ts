@@ -1,0 +1,4 @@
+export enum Category {
+  CARE = 'ASISTENCIAL',
+  ADMINISTRATIVE = 'ADMINISTRATIVA',
+}

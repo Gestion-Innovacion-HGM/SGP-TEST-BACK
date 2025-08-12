@@ -1,0 +1,7 @@
+export enum StatusAttachment {
+  PENDING = 'PENDIENTE',
+  REVIEWED = 'REVISADO',
+  APPROVED = 'APROBADO',
+  REJECTED = 'RECHAZADO',
+  DELETED = 'ELIMINADO',
+}

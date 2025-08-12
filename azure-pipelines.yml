@@ -1,0 +1,50 @@
+trigger:
+  branches:
+    include:
+      - dev
+
+pool:
+  vmImage: ''
+
+steps:
+  - task: NodeTool@0
+    inputs:
+      versionSpec: '16.x' 
+      checkLatest: true
+    displayName: 'Instalar Node.js'
+
+  - script: |
+      npm install
+    displayName: 'Instalar dependencias'
+
+  - script: |
+      npm run lint
+    displayName: 'Ejecutar ESLint'
+
+  - script: |
+      npm run test:cov
+    displayName: 'Ejecutar pruebas con cobertura'
+
+  - script: |
+      npm run build
+    displayName: 'Compilar TypeScript'
+
+  - task: PublishCodeCoverageResults@1
+    inputs:
+      codeCoverageTool: 'Cobertura'
+      summaryFileLocation: 'coverage/cobertura-coverage.xml'
+      reportDirectory: 'coverage'
+    condition: succeededOrFailed()
+
+  - task: CopyFiles@2
+    inputs:
+      contents: 'dist/**'
+      targetFolder: '$(Build.ArtifactStagingDirectory)/dist'
+    displayName: 'Copiar archivos compilados'
+
+  - task: PublishBuildArtifacts@1
+    inputs:
+      pathToPublish: '$(Build.ArtifactStagingDirectory)/dist'
+      artifactName: 'api-gateway'
+      publishLocation: 'Container'
+    displayName: 'Publicar artefactos'
